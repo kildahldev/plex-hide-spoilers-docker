@@ -1,10 +1,11 @@
 # URL to the Plex server
 plex_url = "http://192.168.x.x:32400"
 
-# How to find a token:
-# https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
-# You may also be able to find one by looking at Plex cookies.
-# A token looks something like: fIHGeXfEbda_3X_AB123
+# The Plex DEVICE token (not server token, not user token).
+#
+# How to find a device token:
+# https://www.plexopedia.com/plex-media-server/general/plex-token/#devicetoken
+# A device token looks something like: fIHGeXfEbda_3X_AB123
 plex_token = "..."
 
 # Plex libraries to scan for shows and movies
