@@ -5,9 +5,23 @@ This fork adds Docker support with a Plex webhook listener, so spoilers are hidd
 
 ## Docker setup (Plex Pass required for webhooks)
 
-1. Rename `config_sample.toml` to `config.toml` and fill in your `plex_url`, `plex_token`, and `libraries`
-2. Run: `docker compose up -d`
-3. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
+1. Create a `docker-compose.yml`:
+
+```yaml
+services:
+  plex-hide-spoilers-docker:
+    image: kildahldev/plex-hide-spoilers-docker:latest
+    container_name: plex-hide-spoilers-docker
+    restart: unless-stopped
+    ports:
+      - "5845:5845"
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+```
+
+2. Rename `config_sample.toml` to `config.toml` and fill in your `plex_url`, `plex_token`, and `libraries`
+3. Run: `docker compose up -d`
+4. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
 ---
 
 Please open a Github issue if things aren't working properly, or even if you just have questions!
