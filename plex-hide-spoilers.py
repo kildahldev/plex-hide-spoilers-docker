@@ -162,9 +162,15 @@ def read_config(config_path = None):
         config['ignored_items'] = []
 
     known_settings = ('plex_url', 'plex_token', 'libraries', 'ignored_items', 'hidden_summary_string',
-                           'hidden_title_string', 'hide_summaries', 'hide_thumbnails', 'hide_titles', 'process_thumbnails')
+                           'hidden_title_string', 'hide_summaries', 'hide_thumbnails', 'hide_titles', 'process_thumbnails',
+                           'prefix_summaries')
+    config.setdefault('prefix_summaries', False)
+
     errors = []
+    optional_settings = ('prefix_summaries',)
     for setting in known_settings:
+        if setting in optional_settings:
+            continue
         if setting not in config or (isinstance(config[setting], str) and len(config[setting]) == 0):
             errors.append(setting)
     if errors:
@@ -421,7 +427,10 @@ def perform_single_action(plex, action):
     # Note the return above -- code below is for summaries and titles only
     if action.action == 'hide':
         if action.field == 'summary':
-            value = config['hidden_summary_string']
+            if config['prefix_summaries']:
+                value = config['hidden_summary_string'] + "\n\n\n\n\n\n\n\n" + item.summary
+            else:
+                value = config['hidden_summary_string']
         else:
             value = config['hidden_title_string']
 

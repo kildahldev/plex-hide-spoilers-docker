@@ -13,6 +13,18 @@ if [ ! -f /app/config.toml ] || [ -d /app/config.toml ]; then
   if [ -n "$PLEX_LIBRARIES" ]; then
     sed -i "s|libraries = .*|libraries = $PLEX_LIBRARIES|" /app/config.toml
   fi
+  if [ "$HIDE_SUMMARIES" = "false" ]; then
+    sed -i "s|hide_summaries = .*|hide_summaries = false|" /app/config.toml
+  fi
+  if [ "$HIDE_TITLES" = "true" ]; then
+    sed -i "s|hide_titles = .*|hide_titles = true|" /app/config.toml
+  fi
+  if [ "$HIDE_THUMBNAILS" = "true" ]; then
+    sed -i "s|hide_thumbnails = .*|hide_thumbnails = true|" /app/config.toml
+  fi
+  if [ "$PREFIX_SUMMARIES" = "true" ]; then
+    echo 'prefix_summaries = true' >> /app/config.toml
+  fi
 fi
 
 if [ "$SCAN_ON_STARTUP" = "true" ]; then
