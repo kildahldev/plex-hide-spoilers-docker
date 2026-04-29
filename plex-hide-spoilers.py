@@ -12,6 +12,10 @@ import sys
 import time
 import argparse
 import itertools
+import tempfile
+from io import BytesIO
+
+import requests
 
 from plexapi.server import PlexServer
 from plexapi.alert import AlertListener
@@ -163,11 +167,16 @@ def read_config(config_path = None):
 
     known_settings = ('plex_url', 'plex_token', 'libraries', 'ignored_items', 'hidden_summary_string',
                            'hidden_title_string', 'hide_summaries', 'hide_thumbnails', 'hide_titles', 'process_thumbnails',
-                           'prefix_summaries')
+                           'prefix_summaries', 'blur_thumbnails')
     config.setdefault('prefix_summaries', False)
+    config.setdefault('blur_thumbnails', False)
+
+    if config['blur_thumbnails']:
+        config['hide_thumbnails'] = True
+        config['process_thumbnails'] = True
 
     errors = []
-    optional_settings = ('prefix_summaries',)
+    optional_settings = ('prefix_summaries', 'blur_thumbnails')
     for setting in known_settings:
         if setting in optional_settings:
             continue
@@ -398,15 +407,31 @@ def perform_single_action(plex, action):
         # Using editField on "thumb" doesn't work; even when locked, Plex redownloads the thumbnail
         # on the next refresh. I assume that's a bug, but even so, we need a solution that works now.
         if action.action == 'hide':
-            generic_thumb = item.parentThumb or item.grandparentThumb
-            if not generic_thumb or not generic_thumb.startswith('/'):
-                # TODO: does this ever happen? If so, we should add a fallback thumbnail to use
-                print(f"Warning: couldn't hide thumbnail for {item_title_string(item)}")
-                return False
+            if config.get('blur_thumbnails', False):
+                if not item.thumb or not item.thumb.startswith('/'):
+                    print(f"Warning: couldn't blur thumbnail for {item_title_string(item)}")
+                    return False
 
-            # Add the label first, to ensure we can't get a hidden thumbnail without the label
-            item.addLabel("ThumbnailHidden")
-            item.uploadPoster(url=plex.url(generic_thumb, includeToken=True))
+                from PIL import Image, ImageFilter
+                thumb_url = plex.url(item.thumb, includeToken=True)
+                response = requests.get(thumb_url)
+                img = Image.open(BytesIO(response.content))
+                blurred = img.filter(ImageFilter.GaussianBlur(radius=20))
+                with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as f:
+                    blurred.save(f, format='JPEG')
+                    temp_path = f.name
+                item.addLabel("ThumbnailHidden")
+                item.uploadPoster(filepath=temp_path)
+                os.unlink(temp_path)
+            else:
+                generic_thumb = item.parentThumb or item.grandparentThumb
+                if not generic_thumb or not generic_thumb.startswith('/'):
+                    print(f"Warning: couldn't hide thumbnail for {item_title_string(item)}")
+                    return False
+
+                # Add the label first, to ensure we can't get a hidden thumbnail without the label
+                item.addLabel("ThumbnailHidden")
+                item.uploadPoster(url=plex.url(generic_thumb, includeToken=True))
         else:
             new_poster = 0
             posters = item.posters()

@@ -21,10 +21,9 @@ services:
       - PLEX_LIBRARIES=['TV Shows']
       - SCAN_ON_STARTUP=true
       # Optional:
-      # - PREFIX_SUMMARIES=true
+      # - HIDE_SUMMARIES=prefix
       # - HIDE_TITLES=true
-      # - HIDE_THUMBNAILS=true
-      # - HIDE_SUMMARIES=false
+      # - HIDE_THUMBNAILS=blur
 ```
 
 ### Environment variables
@@ -35,10 +34,9 @@ services:
 | `PLEX_TOKEN` | — | Plex device token |
 | `PLEX_LIBRARIES` | — | Libraries to scan, e.g. `['TV Shows', 'Movies']` |
 | `SCAN_ON_STARTUP` | `false` | Run a full scan when the container starts |
-| `PREFIX_SUMMARIES` | `false` | Instead of replacing summaries, prefix them with a spoiler warning and newlines so you can still scroll to read them |
-| `HIDE_SUMMARIES` | `true` | Hide episode/movie summaries |
+| `HIDE_SUMMARIES` | `true` | `true` = replace with "Summary hidden.", `false` = leave visible, `prefix` = prepend spoiler warning with newlines so you can scroll to read |
 | `HIDE_TITLES` | `false` | Hide episode titles |
-| `HIDE_THUMBNAILS` | `false` | Replace episode thumbnails with the show poster |
+| `HIDE_THUMBNAILS` | `false` | `true` = replace with show poster, `false` = leave visible, `blur` = apply gaussian blur |
 
 2. Run: `docker compose up -d`
 3. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
