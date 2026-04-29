@@ -9,4 +9,5 @@ COPY . .
 
 EXPOSE 5845
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["gunicorn", "-b", "0.0.0.0:5845", "-w", "1", "webhook:app"]

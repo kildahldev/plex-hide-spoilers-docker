@@ -15,13 +15,20 @@ services:
     restart: unless-stopped
     ports:
       - "5845:5845"
+    environment:
+      - PLEX_URL=http://your-plex-ip:32400
+      - PLEX_TOKEN=your-token-here
+      - PLEX_LIBRARIES=['TV Shows']
+```
+
+2. Run: `docker compose up -d`
+3. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
+
+You can also mount a `config.toml` instead of using environment variables if you prefer:
+```yaml
     volumes:
       - ./config.toml:/app/config.toml:ro
 ```
-
-2. Rename `config_sample.toml` to `config.toml` and fill in your `plex_url`, `plex_token`, and `libraries`
-3. Run: `docker compose up -d`
-4. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
 ---
 
 Please open a Github issue if things aren't working properly, or even if you just have questions!

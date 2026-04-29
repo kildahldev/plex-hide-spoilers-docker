@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     ports:
       - "5845:5845"
-    volumes:
-      - ./config.toml:/app/config.toml:ro
     environment:
-      - PORT=5845
+      - PLEX_URL=http://192.168.0.14:32400
+      - PLEX_TOKEN=your-token-here
+      - PLEX_LIBRARIES=['TV Shows']
