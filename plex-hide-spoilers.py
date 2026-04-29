@@ -453,7 +453,8 @@ def perform_single_action(plex, action):
     if action.action == 'hide':
         if action.field == 'summary':
             if config['prefix_summaries']:
-                value = config['hidden_summary_string'] + "\n\n\n\n\n\n\n\n" + item.summary
+                spacer = "\n \n" * 8
+                value = config['hidden_summary_string'] + spacer + "\n" + item.summary
             else:
                 value = config['hidden_summary_string']
         else:
