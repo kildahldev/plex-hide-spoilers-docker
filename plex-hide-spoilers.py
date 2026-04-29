@@ -416,7 +416,7 @@ def perform_single_action(plex, action):
                 thumb_url = plex.url(item.thumb, includeToken=True)
                 response = requests.get(thumb_url)
                 img = Image.open(BytesIO(response.content))
-                blurred = img.filter(ImageFilter.GaussianBlur(radius=20))
+                blurred = img.filter(ImageFilter.GaussianBlur(radius=40))
                 with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as f:
                     blurred.save(f, format='JPEG')
                     temp_path = f.name
