@@ -1,6 +1,15 @@
 A script to hide summaries (with potential spoilers) from unseen episodes (and/or movies) in Plex.  
 Episode titles and thumbnails can also be hidden.
 
+This fork adds Docker support with a Plex webhook listener, so spoilers are hidden/unhidden automatically without Tautulli. It listens for Plex webhooks (`media.scrobble`, `library.new`) and triggers the script on each event.
+
+## Docker setup (Plex Pass required for webhooks)
+
+1. Rename `config_sample.toml` to `config.toml` and fill in your `plex_url`, `plex_token`, and `libraries`
+2. Run: `docker compose up -d`
+3. In Plex, go to **Settings → Webhooks** and add this server as `http://<your-server-ip>:5845/webhook`
+---
+
 Please open a Github issue if things aren't working properly, or even if you just have questions!
 
 # Features

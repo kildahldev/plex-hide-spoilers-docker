@@ -7,6 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt flask gunicorn
 
 COPY . .
 
-EXPOSE 9000
+EXPOSE 5845
 
-CMD ["gunicorn", "-b", "0.0.0.0:9000", "-w", "1", "webhook:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5845", "-w", "1", "webhook:app"]
