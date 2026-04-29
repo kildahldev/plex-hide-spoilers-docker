@@ -19,6 +19,7 @@ services:
       - PLEX_URL=http://your-plex-ip:32400
       - PLEX_TOKEN=your-token-here
       - PLEX_LIBRARIES=['TV Shows']
+      - SCAN_ON_STARTUP=true
 ```
 
 2. Run: `docker compose up -d`

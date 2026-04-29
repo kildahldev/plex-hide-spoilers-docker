@@ -15,4 +15,8 @@ if [ ! -f /app/config.toml ] || [ -d /app/config.toml ]; then
   fi
 fi
 
+if [ "$SCAN_ON_STARTUP" = "true" ]; then
+  python3 /app/plex-hide-spoilers.py --quiet
+fi
+
 exec "$@"
